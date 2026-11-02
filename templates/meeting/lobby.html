@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Ready to join? — {{ room.title }} — Teams{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/meeting.css' %}">
+{% endblock %}
+
+{% block body_attrs %}data-room-slug="{{ room.slug }}"{% endblock %}
+
+{% block content %}
+<div class="lobby-container" data-testid="page-lobby">
+  <div class="lobby-card">
+    
+    <!-- Left: Video & Audio Preview -->
+    <div>
+      <div class="preview-media-box">
+        <video id="lobby-preview-video" class="preview-video" autoplay playsinline muted data-testid="video-lobby-preview"></video>
+        
+        <div id="lobby-avatar-fallback" class="preview-avatar-fallback">
+          <div id="lobby-avatar-circle" class="preview-avatar-circle">G</div>
+        </div>
+
+        <div class="preview-overlay-controls">
+          <button id="btn-lobby-mic-toggle" class="control-btn" type="button" title="Toggle Microphone" data-testid="btn-lobby-toggle-mic">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+              <line x1="12" y1="19" x2="12" y2="23"></line>
+              <line x1="8" y1="23" x2="16" y2="23"></line>
+            </svg>
+          </button>
+          
+          <button id="btn-lobby-cam-toggle" class="control-btn" type="button" title="Toggle Camera" data-testid="btn-lobby-toggle-cam">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="23 7 16 12 23 17 23 7"></polygon>
+              <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Live Audio VU meter -->
+      <div class="audio-vu-meter-bar" title="Microphone Level" data-testid="meter-audio-level">
+        <div id="lobby-vu-fill" class="audio-vu-fill"></div>
+      </div>
+      <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px; display: flex; justify-content: space-between;">
+        <span>Microphone input level</span>
+        <span>Speak to test</span>
+      </div>
+
+      <!-- Device selectors -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 18px;">
+        <div class="form-group" style="margin-bottom: 0;">
+          <label class="form-label" for="select-camera-device">Camera</label>
+          <select id="select-camera-device" class="form-select" data-testid="select-camera-device">
+            <option value="">Default Camera</option>
+          </select>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 0;">
+          <label class="form-label" for="select-mic-device">Microphone</label>
+          <select id="select-mic-device" class="form-select" data-testid="select-mic-device">
+            <option value="">Default Microphone</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Meeting Details & Join Action -->
+    <div style="display: flex; flex-direction: column; justify-content: center;">
+      <div style="margin-bottom: 24px;">
+        <span class="host-badge-pill" style="margin-bottom: 8px; display: inline-block;">
+          Room: {{ room.slug }}
+        </span>
+        <h2 style="font-size: 26px; font-weight: 700; margin-bottom: 6px;">{{ room.title }}</h2>
+        <p style="color: var(--text-secondary); font-size: 14px;">
+          Check your audio & video settings before entering.
+        </p>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="input-display-name">Your Display Name</label>
+        <input 
+          type="text" 
+          id="input-display-name" 
+          class="form-input" 
+          placeholder="e.g. Alex Rivera" 
+          value="{{ default_name }}"
+          data-testid="input-display-name"
+          maxlength="50"
+          required
+        >
+        <small style="font-size: 12px; color: var(--text-muted); margin-top: 4px; display: block;">
+          This name will be visible to other participants in the call.
+        </small>
+      </div>
+
+      <button id="btn-join-room" type="button" class="btn btn-primary" style="padding: 14px; font-size: 16px; margin-top: 10px;" data-testid="btn-join-room">
+        Join Meeting
+      </button>
+
+      {% if is_host %}
+      <div style="margin-top: 16px; padding: 10px 14px; background: rgba(59, 130, 246, 0.1); border-radius: var(--radius-md); font-size: 12px; color: #93C5FD;">
+        🛡️ You are recognized as the <strong>Meeting Host</strong> and will have moderation controls inside.
+      </div>
+      {% endif %}
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/lobby.js' %}"></script>
+{% endblock %}

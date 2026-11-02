@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/meeting.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="landing-page" data-testid="page-landing">
+  <section class="hero-section">
+    <div class="hero-badge">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+      </svg>
+      <span>Instant, Zero-Friction Video Calling</span>
+    </div>
+
+    <h1 class="hero-title">Video meetings made simple, fast, and lightweight.</h1>
+    <p class="hero-subtitle">
+      No bulky desktop downloads. No mandatory logins for guests. Just create a meeting link, share it with your team, and start talking in seconds with crystal-clear audio and HD video.
+    </p>
+
+    <div class="hero-actions">
+      {% if user.is_authenticated %}
+        <form method="POST" action="{% url 'create_room' %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-primary" style="padding: 14px 28px; font-size: 16px;" data-testid="btn-hero-start">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="23 7 16 12 23 17 23 7"></polygon>
+              <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+            </svg>
+            Start Instant Meeting
+          </button>
+        </form>
+      {% else %}
+        <form method="POST" action="{% url 'create_room' %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-primary" style="padding: 14px 28px; font-size: 16px;" data-testid="btn-hero-start">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="23 7 16 12 23 17 23 7"></polygon>
+              <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+            </svg>
+            Start Instant Meeting
+          </button>
+        </form>
+      {% endif %}
+
+      <form method="POST" action="{% url 'landing' %}" class="join-form-wrapper">
+        {% csrf_token %}
+        <input 
+          type="text" 
+          name="room_code" 
+          placeholder="Enter room code (e.g. abc-defg-hij)" 
+          class="join-input"
+          data-testid="input-join-code"
+          required
+        >
+        <button type="submit" class="btn btn-secondary" style="padding: 8px 16px;" data-testid="btn-join-meeting">
+          Join
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <section class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon-box">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polygon points="23 7 16 12 23 17 23 7"></polygon>
+          <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+        </svg>
+      </div>
+      <h3 style="margin-bottom: 8px;">Multi-Party Video</h3>
+      <p style="color: var(--text-secondary); font-size: 14px;">
+        Fluid peer-to-peer WebRTC video with auto-arranging responsive layout and active speaker spotlight.
+      </p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon-box">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+          <line x1="8" y1="21" x2="16" y2="21"></line>
+          <line x1="12" y1="17" x2="12" y2="21"></line>
+        </svg>
+      </div>
+      <h3 style="margin-bottom: 8px;">Screen Sharing</h3>
+      <p style="color: var(--text-secondary); font-size: 14px;">
+        Share your full monitor, application window, or browser tab with a single click.
+      </p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon-box">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        </svg>
+      </div>
+      <h3 style="margin-bottom: 8px;">In-Call Real-Time Chat</h3>
+      <p style="color: var(--text-secondary); font-size: 14px;">
+        Exchange notes, links, and code snippets during meetings with real-time WebSocket messaging.
+      </p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon-box">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polygon points="10 8 16 12 10 16 10 8"></polygon>
+        </svg>
+      </div>
+      <h3 style="margin-bottom: 8px;">Local Call Recording</h3>
+      <p style="color: var(--text-secondary); font-size: 14px;">
+        Record meetings right in your browser and instantly download a high-definition .webm file.
+      </p>
+    </div>
+  </section>
+</div>
+{% endblock %}

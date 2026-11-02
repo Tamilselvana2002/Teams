@@ -1,0 +1,203 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ room.title }} — Teams Meeting{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/meeting.css' %}">
+{% endblock %}
+
+{% block navbar %}{% endblock %} <!-- Omit global navbar for immersive video call -->
+
+{% block body_attrs %}data-room-slug="{{ room.slug }}" data-display-name="{{ display_name }}" data-is-host="{% if is_host %}true{% else %}false{% endif %}"{% endblock %}
+
+{% block content %}
+<div class="meeting-viewport" data-testid="page-meeting-room">
+  
+  <div class="meeting-main-area">
+    <!-- Top Floating Header Bar -->
+    <header class="meeting-top-bar">
+      <div class="meeting-room-title">
+        <div class="brand-icon" style="width: 26px; height: 26px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polygon points="23 7 16 12 23 17 23 7"></polygon>
+            <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+          </svg>
+        </div>
+        <span>{{ room.title }}</span>
+        <code style="color: #93C5FD; font-size: 13px; background: rgba(59, 130, 246, 0.15); padding: 2px 8px; border-radius: 4px;">{{ room.slug }}</code>
+      </div>
+
+      <div style="display: flex; gap: 12px; align-items: center;">
+        <div id="rec-status-badge" class="rec-badge">
+          <div class="rec-dot"></div>
+          <span>REC</span>
+        </div>
+
+        <button id="btn-copy-invite" type="button" class="btn btn-outline" style="padding: 6px 12px; font-size: 13px;" data-testid="btn-copy-invite" title="Copy meeting link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+          Invite Link
+        </button>
+      </div>
+    </header>
+
+    <!-- Dynamic Video Grid -->
+    <div id="video-grid" class="video-grid-container" data-testid="container-video-grid">
+      <!-- Local participant video tile -->
+      <div id="local-video-tile" class="video-tile local-tile" data-testid="tile-local-video">
+        <video id="local-video" autoplay playsinline muted></video>
+        
+        <div id="local-avatar" class="tile-avatar-placeholder">
+          <div id="local-avatar-circle" class="tile-avatar-circle">ME</div>
+        </div>
+
+        <div class="tile-bottom-badge">
+          <span id="local-name-badge">{{ display_name }} (You)</span>
+          <span id="local-mute-badge" class="mic-muted-icon" title="Muted">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="1" y1="1" x2="23" y2="23"></line>
+              <path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6"></path>
+              <path d="M17 16.95A7 7 0 0 1 5 12v-2"></path>
+            </svg>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Floating Glass Controls Toolbar -->
+    <div class="floating-meeting-toolbar">
+      <!-- Mic toggle -->
+      <button id="btn-toggle-mic" class="control-btn" type="button" title="Mute/Unmute Mic (M)" data-testid="btn-toggle-mic">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+          <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+          <line x1="12" y1="19" x2="12" y2="23"></line>
+          <line x1="8" y1="23" x2="16" y2="23"></line>
+        </svg>
+      </button>
+
+      <!-- Camera toggle -->
+      <button id="btn-toggle-cam" class="control-btn" type="button" title="Start/Stop Video (V)" data-testid="btn-toggle-cam">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polygon points="23 7 16 12 23 17 23 7"></polygon>
+          <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+        </svg>
+      </button>
+
+      <!-- Screen share -->
+      <button id="btn-share-screen" class="control-btn" type="button" title="Share Screen (S)" data-testid="btn-share-screen">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+          <line x1="8" y1="21" x2="16" y2="21"></line>
+          <line x1="12" y1="17" x2="12" y2="21"></line>
+        </svg>
+      </button>
+
+      <!-- Audio-only low-bandwidth mode -->
+      <button id="btn-low-bandwidth" class="control-btn" type="button" title="Low-Bandwidth Mode (Audio Only)" data-testid="btn-low-bandwidth">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
+          <path d="M1.42 9a16 16 0 0 1 21.16 0"></path>
+          <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
+          <line x1="12" y1="20" x2="12.01" y2="20"></line>
+        </svg>
+      </button>
+
+      <!-- Record meeting -->
+      <button id="btn-record-meeting" class="control-btn" type="button" title="Record Call Locally (.webm)" data-testid="btn-record-meeting">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <circle cx="12" cy="12" r="4" fill="currentColor"></circle>
+        </svg>
+      </button>
+
+      <div style="width: 1px; height: 28px; background: var(--border-glass); margin: 0 4px;"></div>
+
+      <!-- Chat Drawer toggle -->
+      <button id="btn-toggle-chat" class="control-btn" type="button" title="In-Call Chat" data-testid="btn-toggle-chat">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        </svg>
+        <span id="chat-unread-badge" style="position: absolute; top: 6px; right: 6px; width: 8px; height: 8px; background: var(--accent-primary); border-radius: 9999px; display: none;"></span>
+      </button>
+
+      <!-- Participants Drawer toggle -->
+      <button id="btn-toggle-participants" class="control-btn" type="button" title="Participants" data-testid="btn-toggle-participants">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+          <circle cx="9" cy="7" r="4"></circle>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+        </svg>
+        <span id="badge-participant-count" class="host-badge-pill" style="position: absolute; top: -6px; right: -6px; font-size: 10px; padding: 1px 5px;" data-testid="badge-participant-count">1</span>
+      </button>
+
+      <!-- Leave Call -->
+      <button id="btn-leave-call" class="control-btn control-btn-danger" type="button" title="Leave Call" data-testid="btn-leave-call">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M16 17l5-5-5-5"></path>
+          <path d="M21 12H9"></path>
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+        </svg>
+        <span>Leave</span>
+      </button>
+
+      {% if is_host %}
+      <!-- Host: End for all -->
+      <button id="btn-end-meeting-all" class="btn btn-outline" style="border-color: rgba(239, 68, 68, 0.4); color: #F87171; font-size: 12px; padding: 8px 12px;" type="button" data-testid="btn-end-meeting-all" title="End call for all attendees">
+        End for All
+      </button>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Slide-Out Chat Drawer -->
+  <aside id="chat-drawer" class="meeting-side-drawer">
+    <div class="drawer-header">
+      <h3 style="font-size: 16px; font-weight: 600;">In-Call Messages</h3>
+      <button id="chat-close-btn" class="drawer-close-btn" type="button">&times;</button>
+    </div>
+
+    <div id="chat-messages-list" class="drawer-body" data-testid="list-chat-messages">
+      <div style="font-size: 12px; color: var(--text-muted); text-align: center; margin-top: 10px;">
+        Messages sent here are visible to all current participants.
+      </div>
+    </div>
+
+    <div class="drawer-footer">
+      <div style="display: flex; gap: 8px;">
+        <input 
+          type="text" 
+          id="input-chat-message" 
+          class="form-input" 
+          placeholder="Send a message..." 
+          data-testid="input-chat-message"
+        >
+        <button id="btn-send-chat" type="button" class="btn btn-primary" data-testid="btn-send-chat">
+          Send
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Slide-Out Participants Drawer -->
+  <aside id="participants-drawer" class="meeting-side-drawer">
+    <div class="drawer-header">
+      <h3 style="font-size: 16px; font-weight: 600;">Participants</h3>
+      <button id="participants-close-btn" class="drawer-close-btn" type="button">&times;</button>
+    </div>
+
+    <div id="participants-list" class="drawer-body">
+      <!-- Injected dynamically by meeting.js -->
+    </div>
+  </aside>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/meeting.js' %}"></script>
+{% endblock %}

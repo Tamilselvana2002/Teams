@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Meeting Ended — Teams{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/meeting.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="ended-container" data-testid="page-meeting-ended">
+  <div class="card-glass ended-card">
+    <div style="width: 64px; height: 64px; background: rgba(59, 130, 246, 0.15); border-radius: var(--radius-pill); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; color: #60A5FA;">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M16 17l5-5-5-5"></path>
+        <path d="M21 12H9"></path>
+        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+      </svg>
+    </div>
+
+    <h1 style="font-size: 26px; font-weight: 700; margin-bottom: 8px;">You have left the meeting</h1>
+    <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 28px;">
+      {% if room %}
+        Meeting <strong>{{ room.title }}</strong> (<code>{{ slug }}</code>)
+      {% else %}
+        Thank you for using Teams.
+      {% endif %}
+    </p>
+
+    <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
+      <a href="{% url 'room_lobby' slug=slug %}" class="btn btn-secondary" style="padding: 12px 22px;" data-testid="btn-rejoin-meeting">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="1 4 1 10 7 10"></polyline>
+          <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+        </svg>
+        Rejoin Meeting
+      </a>
+
+      <a href="{% url 'landing' %}" class="btn btn-primary" style="padding: 12px 22px;" data-testid="btn-return-home">
+        Return to Home
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}
