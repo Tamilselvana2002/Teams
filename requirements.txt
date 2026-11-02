@@ -1,0 +1,17 @@
+# ==============================================================================
+# Teams — Real-Time Call & Video Meeting Platform Dependencies
+# ==============================================================================
+
+# Core Django Web Framework
+Django>=5.0,<7.0
+
+# Real-Time WebSockets & Channels Protocol Router
+channels>=4.0.0
+daphne>=4.0.0
+asgiref>=3.9.0
+
+# Networking & Protocol Transport (Twisted / Autobahn)
+autobahn>=22.4.2
+twisted>=22.4.0
+sqlparse>=0.5.0
+tzdata>=2024.1
