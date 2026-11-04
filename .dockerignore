@@ -1,0 +1,25 @@
+# Git & IDEs
+.git/
+.gitignore
+.vscode/
+.idea/
+
+# Python Virtual Environments & Cache
+venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Local Database & Media
+db.sqlite3
+db.sqlite3-journal
+media/
+staticfiles/
+
+# Documentation & Org state
+docs/
+org/
+TODO.md
+*.log

@@ -1,0 +1,30 @@
+# ==============================================================================
+# Teams — Docker Compose Specification
+# Usage: docker compose up -d --build
+# ==============================================================================
+
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: teams:latest
+    container_name: teams_app
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - DJANGO_SETTINGS_MODULE=config.settings
+      - ALLOWED_HOSTS=*
+      - DATABASE_PATH=/app/data/db.sqlite3
+    volumes:
+      # Persist SQLite database and uploads outside the container
+      - teams_data:/app/data
+      - teams_media:/app/media
+
+volumes:
+  teams_data:
+  teams_media:

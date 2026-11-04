@@ -1,0 +1,33 @@
+{
+  "title": "Teams",
+  "subtitle": "Complete Project Documentation & Multi-App Deployment Manual",
+  "version": "1.0.0",
+  "company": "Teams Platform",
+  "author": "Documentation Team — AI Software Company",
+  "date": "2026-11-03",
+  "audience": "Management, developers, system administrators, and end users",
+  "confidential": "Internal & Customer Documentation",
+  "brandColor": "#3B82F6",
+  "output": "Teams_Documentation_v1.0.pdf",
+  "tocDepth": 2,
+  "chapters": [
+    "01_executive_summary.md",
+    "02_business_overview.md",
+    "03_users_roles_permissions.md",
+    "04_features_and_modules.md",
+    "05_system_architecture.md",
+    "06_data_model.md",
+    "07_api_and_urls.md",
+    "08_user_guide.md",
+    "09_admin_guide.md",
+    "10_installation_and_deployment.md",
+    "11_testing_and_quality.md",
+    "12_security_and_compliance.md",
+    "13_troubleshooting_and_faq.md",
+    "14_changelog_and_roadmap.md",
+    "15_appendix.md"
+  ],
+  "revisionHistory": [
+    { "version": "1.0.0", "date": "2026-11-03", "author": "Documentation Team", "changes": "Initial complete edition with beginner-friendly multi-app AWS deployment guide" }
+  ]
+}

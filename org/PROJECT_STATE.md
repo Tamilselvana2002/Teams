@@ -34,7 +34,7 @@ _Last updated: 2026-11-02 by CEO & Delivery Head (00 Orchestrator)_
 | 11 | Debugging Team | ✅ Done | 0 Open Bugs | Triage complete |
 | 08 | CISO & Security Review | ✅ Done | DTLS/SRTP, CSRF, XSS sanitization verified | G7 — Security PASSED |
 | 13 | Completion Auditor | ✅ Done | 55/55 matrix rows verified, 0 stubs | G8 — Audit PASSED |
-| 14 | Documentation Team | ✅ Done | Project Docs & README manual | G9 — Docs complete |
+| 14 | Documentation Team | ✅ Done | Complete Docs (Chapters 01–15) in `docs/project-docs/` | G9 — Docs complete (PASSED) |
 
 ## 4. Delivered Application Modules
 - **P01 — Landing Page (`/`):** Hero section, instant room quick-start, 9-character code join form, feature overview cards.

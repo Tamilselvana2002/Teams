@@ -1,0 +1,21 @@
+[Unit]
+Description=Teams Real-Time Call and Video Meeting Service (Daphne ASGI)
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/var/www/teams
+Environment="PATH=/var/www/teams/venv/bin"
+Environment="PYTHONUNBUFFERED=1"
+ExecStart=/var/www/teams/venv/bin/daphne -b 127.0.0.1 -p 8000 config.asgi:application
+Restart=always
+RestartSec=3
+KillSignal=SIGTERM
+
+# Resource Limits
+LimitNOFILE=65535
+
+[Install]
+WantedBy=multi-user.target
