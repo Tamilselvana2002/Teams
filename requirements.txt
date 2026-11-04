@@ -2,8 +2,9 @@
 # Teams — Real-Time Call & Video Meeting Platform Dependencies
 # ==============================================================================
 
-# Core Django Web Framework
+# Core Django Web Framework & Static Files
 Django>=5.0,<7.0
+whitenoise>=6.0.0
 
 # Real-Time WebSockets & Channels Protocol Router
 channels>=4.0.0

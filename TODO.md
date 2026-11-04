@@ -1,51 +1,83 @@
-# TODO — Docker Containerization & Docker Hub Push Guide
+# TODO — Manual Step-by-Step Commands Guide
 
-Progress: 4/4 · Current item: All Complete · Next step: Ready for user build & push
+Progress: 4/4 · Current item: All Complete · Next step: None — Ready for user manual execution
 
 ## Assumptions
-- Base Image: `python:3.12-slim` (lightweight, standard Python base with pre-built wheels for Twisted/Autobahn/Channels).
-- Container Server: Daphne ASGI on port 8000 (supporting HTTP and WebSockets for real-time video/audio).
-- Target: Full Docker containerization + Docker Compose + step-by-step push to Docker Hub.
+- Operating System: Windows PowerShell for local execution; Linux (Ubuntu) for AWS EC2 remote server.
+- Project Directory: `D:\test`
+- Docker Hub Username: `tamil2002a`
+- Docker Hub Image Name: `tamil2002a/teams:latest` (or `v1.0.0`)
+- User wants copy-pasteable terminal commands with clear explanations for what each command does and common pitfalls to avoid.
 
 ## Items
 
-### 1. Production Dockerfile & .dockerignore
-- What: Create optimized Dockerfile and .dockerignore for the Teams Django/Channels/Daphne application.
-- Where: `Dockerfile`, `.dockerignore`
+### 1. Manual Commands: Run Locally with Python & Daphne (No Docker)
+- What: Document exact step-by-step commands to set up virtualenv, install dependencies, run migrations, collect static assets, and launch Daphne ASGI server locally.
+- Where: `docs/MANUAL_COMMANDS_GUIDE.md`, section 1
 - Acceptance checks:
-  - [x] `Dockerfile` uses Python 3.12-slim base
-  - [x] Installs system dependencies, pip packages from requirements.txt
-  - [x] Exposes port 8000 and runs Daphne ASGI
-  - [x] `.dockerignore` excludes `venv`, `__pycache__`, `db.sqlite3`, `.git`
+  - [x] Terminal navigation (`cd D:\test`)
+  - [x] Virtualenv creation and activation (`.venv\Scripts\activate`)
+  - [x] Environment variables and pip install
+  - [x] Database migration and collectstatic
+  - [x] Starting Daphne on port 8000
 - Status: ✅
-- Proof: Created `Dockerfile` with Python 3.12-slim, Daphne ASGI on port 8000, and `.dockerignore` excluding venv, pycache, local sqlite db, and git.
+- Proof: Written in `docs/MANUAL_COMMANDS_GUIDE.md` Section 1 covering navigation, virtualenv, env variables, migrate, collectstatic, and Daphne startup.
 
-### 2. Multi-Container Orchestration (docker-compose.yml)
-- What: Create docker-compose.yml for 1-click startup with volume persistence for SQLite/media and environment configs.
-- Where: `docker-compose.yml`
+### 2. Manual Commands: Run Locally with Docker & Docker Compose
+- What: Document exact manual commands for Docker Desktop: building the image, starting containers, viewing logs, stopping, and handling browser cache.
+- Where: `docs/MANUAL_COMMANDS_GUIDE.md`, section 2
 - Acceptance checks:
-  - [x] Defines `web` service mapping port `8000:8000`
-  - [x] Configures persistent volume for database (`db.sqlite3`)
-  - [x] Sets environment variables (DJANGO_SETTINGS_MODULE, DEBUG, ALLOWED_HOSTS)
+  - [x] Changing directory to project folder (preventing C:\Windows\system32 error)
+  - [x] Building image with `docker build` and `docker compose build`
+  - [x] Starting container with `docker compose up -d`
+  - [x] Checking status with `docker ps` and `docker logs`
+  - [x] Stopping with `docker compose down`
 - Status: ✅
-- Proof: Created `docker-compose.yml` with `teams_app` container, port `8000:8000`, and named volumes `teams_data` and `teams_media`.
+- Proof: Written in `docs/MANUAL_COMMANDS_GUIDE.md` Section 2 with exact steps for directory navigation, build, start, status, logs, hard refresh, and teardown.
 
-### 3. Container Entrypoint Script (entrypoint.sh)
-- What: Automated startup script that applies database migrations, collects static assets, and launches Daphne ASGI.
-- Where: `entrypoint.sh`
+### 3. Manual Commands: Tag and Push to Docker Hub
+- What: Document exact commands for authenticating with Docker Hub, tagging images properly (preventing the two-argument docker push error), and pushing.
+- Where: `docs/MANUAL_COMMANDS_GUIDE.md`, section 3
 - Acceptance checks:
-  - [x] Executes `python manage.py migrate --noinput`
-  - [x] Executes `python manage.py collectstatic --noinput`
-  - [x] Starts Daphne ASGI server binding to `0.0.0.0:8000`
+  - [x] `docker login` syntax
+  - [x] `docker tag` syntax with source and destination
+  - [x] `docker push` syntax (single image:tag argument)
+  - [x] Verifying on Docker Hub web dashboard
 - Status: ✅
-- Proof: Created `entrypoint.sh` executing migrations, collectstatic, and `exec daphne -b 0.0.0.0 -p 8000 config.asgi:application`.
+- Proof: Written in `docs/MANUAL_COMMANDS_GUIDE.md` Section 3 explaining the 2-argument vs 1-argument rule, login, tagging, pushing, and dashboard verification.
 
-### 4. Step-by-Step Guide to Build, Run & Push to Docker Hub
-- What: Complete beginner manual for Docker Desktop on Windows, building, testing, tagging, and pushing image to Docker Hub (`docker push`).
-- Where: `docs/DOCKER_GUIDE.md`
+### 4. Manual Commands: Deploy and Run on AWS EC2 Server
+- What: Document exact commands on the remote AWS Ubuntu EC2 server to pull the image and run it.
+- Where: `docs/MANUAL_COMMANDS_GUIDE.md`, section 4
 - Acceptance checks:
-  - [x] Explains `docker build`, `docker run`, `docker compose up`
-  - [x] Explains `docker login`, `docker tag`, `docker push` with copyable commands
-  - [x] Explains running the Docker container on the AWS EC2 instance
+  - [x] SSH connect command
+  - [x] Docker installation / verification on EC2
+  - [x] `docker pull tamil2002a/teams:latest`
+  - [x] `docker run` command with port mapping 8000 and volume persistence
+  - [x] Curl test and browser verification
 - Status: ✅
-- Proof: Created `docs/DOCKER_GUIDE.md` covering Docker installation, build, run, `docker login`, `docker tag`, and `docker push` commands.
+- Proof: Written in `docs/MANUAL_COMMANDS_GUIDE.md` Section 4 covering SSH, Docker install, pull, run, status check, and AWS security group verification.
+
+
+### 3. Manual Commands: Tag and Push to Docker Hub
+- What: Document exact commands for authenticating with Docker Hub, tagging images properly (preventing the two-argument docker push error), and pushing.
+- Where: `docs/MANUAL_COMMANDS_GUIDE.md`, section 3
+- Acceptance checks:
+  - [ ] `docker login` syntax
+  - [ ] `docker tag` syntax with source and destination
+  - [ ] `docker push` syntax (single image:tag argument)
+  - [ ] Verifying on Docker Hub web dashboard
+- Status: ⬜
+- Proof: 
+
+### 4. Manual Commands: Deploy and Run on AWS EC2 Server
+- What: Document exact commands on the remote AWS Ubuntu EC2 server to pull the image and run it.
+- Where: `docs/MANUAL_COMMANDS_GUIDE.md`, section 4
+- Acceptance checks:
+  - [ ] SSH connect command
+  - [ ] Docker installation / verification on EC2
+  - [ ] `docker pull tamil2002a/teams:latest`
+  - [ ] `docker run` command with port mapping 8000 and volume persistence
+  - [ ] Curl test and browser verification
+- Status: ⬜
+- Proof: 
